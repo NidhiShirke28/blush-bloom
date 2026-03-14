@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout - Blush & Bloom</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .checkout-container {
+      max-width: 700px;
+      margin: 60px auto;
+      background-color: #fffafc;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    }
+
+    .checkout-container h2 {
+      color: #d6336c;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .checkout-container label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 500;
+    }
+
+    .checkout-container input, .checkout-container textarea {
+      width: 100%;
+      padding: 12px;
+      margin-top: 5px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .checkout-container button {
+      margin-top: 25px;
+      background-color: #ff69b4;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      display: block;
+      width: 100%;
+    }
+
+    .checkout-container button:hover {
+      background-color: #d6336c;
+    }
+    .upi-app {
+  margin: 8px 0;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.upi-app:hover {
+  background-color: #f9f9f9;
+}
+  </style>
+</head>
+<body>
+  <div class="checkout-container">
+    <h2>Checkout</h2>
+    
+      <label for="name">Full Name</label>
+      <input type="text" id="name" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" required>
+
+      <label for="address">Shipping Address</label>
+      <textarea id="address" rows="3" required></textarea>
+
+      
+
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" required>
+    
+
+<div class="payment-section">
+  <form action="order-confirmation.html" method="get" class="payment-section">
+  <h2>Select Payment Method</h2>
+  
+    <label>
+      <input type="radio" name="payment" value="cod" checked>
+      Cash on Delivery (COD)
+    </label><br>
+
+    <!-- UPI Option -->
+<label>
+  <input type="radio" name="payment" value="upi" id="upi-option">
+  Pay via UPI
+</label>
+
+<!-- UPI Apps -->
+<div id="upi-apps" style="display:none; margin-top:15px;">
+
+  <div class="upi-app">
+    <input type="radio" name="upiApp" value="Google Pay" id="gpay">
+    <label for="gpay">Google Pay</label>
+  </div>
+
+  <div class="upi-app">
+    <input type="radio" name="upiApp" value="Paytm" id="paytm">
+    <label for="paytm">Paytm</label>
+  </div>
+
+  <div class="upi-app">
+    <input type="radio" name="upiApp" value="PhonePe" id="phonepe">
+    <label for="phonepe">PhonePe</label>
+  </div>
+
+</div>
+
+<button id="payBtn">Pay Now</button>
+
+<div id="processing" style="display:none; color:green; margin-top:10px;">
+  Processing Payment...
+</div>
+
+    <label>
+      <input type="radio" name="payment" value="card">
+      Debit/Credit Card
+    </label><br><br>
+
+    <button type="submit">Place Order</button>
+
+
+    
+
+  </form>
+</div>
+<script>
+  const upiOption = document.getElementById("upi-option");
+const upiApps = document.getElementById("upi-apps");
+const payBtn = document.getElementById("payBtn");
+const processing = document.getElementById("processing");
+
+upiOption.addEventListener("change", function () {
+  upiApps.style.display = "block";
+});
+
+payBtn.addEventListener("click", async function () {
+
+  const selectedApp = document.querySelector('input[name="upiApp"]:checked');
+
+  if (!selectedApp) {
+    alert("Please select a UPI app");
+    return;
+  }
+
+  processing.style.display = "block";
+
+  setTimeout(async () => {
+
+    // Backend call to save order
+    await fetch("/place-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        paymentMethod: "UPI",
+        upiApp: selectedApp.value
+      })
+    });
+
+    processing.style.display = "none";
+    alert("Payment Successful 🎉");
+    window.location.href = "success.html";
+
+  }, 2000);
+
+});
+</script>
+</body>
+</html>
+
+

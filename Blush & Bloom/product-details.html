@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Product Details | Blush & Bloom</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background-color: #fffafc;
+      color: #333;
+    }
+
+    header {
+      background-color: #ffcce0;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      color: #b30059;
+      font-size: 36px;
+    }
+
+    .product-container {
+      max-width: 900px;
+      margin: 40px auto;
+      display: flex;
+      gap: 30px;
+      padding: 20px;
+      background-color: #fff0f5;
+      border-radius: 12px;
+      box-shadow: 0 0 10px #f9d6e4;
+    }
+
+    .product-container img {
+      width: 300px;
+      border-radius: 10px;
+    }
+
+    .product-details {
+      flex: 1;
+    }
+
+    .product-details h2 {
+      color: #cc0066;
+      margin-bottom: 10px;
+    }
+
+    .product-details p {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .price {
+      font-size: 22px;
+      color: #b30059;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+
+    .buy-button {
+      margin-top: 20px;
+      background-color: #cc0066;
+      color: white;
+      padding: 12px 25px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .buy-button:hover {
+      background-color: #a30052;
+    }
+
+    footer {
+      background-color: #ffe6f0;
+      padding: 15px;
+      text-align: center;
+      font-size: 14px;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Product Details</h1>
+  </header>
+
+  <div class="product-container">
+    <img id="product-img" src="" alt="Product Image">
+    <div class="product-details">
+      <h2 id="product-name">Product Name</h2>
+      <p id="product-desc">Description here</p>
+      <p class="price" id="product-price">₹0</p>
+      <button class="buy-button">Add to Cart</button>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2025 Blush & Bloom. All rights reserved.
+  </footer>
+
+  <script>
+    // Products object
+    const products = {
+      rose: { name: "Rose Glow Face Cream", img: "images/blushbloom rose cream.jpg", desc: "Hydrates, softens, and restores glow. Enriched with real rose extracts.", price: "₹299" },
+      aloe: { name: "Aloe Vera Gel", img: "images/blushbloom aloevera gel.png", desc: "Soothes and refreshes your skin naturally. Ideal for daily use.", price: "₹249" },
+      mint: { name: "Mint Cleanser", img: "images/blushbloom mint cleanser.png", desc: "Deep cleanses with minty freshness. Gentle and effective.", price: "₹289" },
+      vitamin: { name: "Vitamin C Serum", img: "images/Blush&Bloom vitamin c serum.jpg", desc: "Brightens skin tone, reduces spots. Power-packed with Vitamin C.", price: "₹199" },
+      herbal: { name: "Herbal Hair Oil", img: "images/blushbloom hair oil.png", desc: "Natural hair oil enriched with Ayurvedic herbs to nourish scalp and boost hair growth.", price: "₹199" },
+      keratin: { name: "Keratin Hair Mask", img: "images/bkushbloom hair mask.png", desc: "Deep conditioning hair mask with keratin protein for smooth and frizz-free hair.", price: "₹299" },
+      hibiscus: { name: "Hibiscus Shampoo", img: "images/blushbloom hair shampoo.png", desc: "Gentle shampoo with hibiscus extract to reduce hair fall and strengthen roots.", price: "₹349" },
+      frizz: { name: "Frizz Control Serum", img: "images/blushbloom hair serum.jpg", desc: "Lightweight serum to control frizz and give your hair a sleek shine.", price: "₹249" },
+      shea: { name: "Shea Butter Body Lotion", img: "images/blushbloom body lotion.jpg", desc: "Deeply moisturizing body lotion with rich shea butter for soft, smooth skin.", price: "₹379" },
+      detan: { name: "Detan Body Scrub", img: "images/blushbloom body scrub .jpg", desc: "Exfoliating scrub that removes tan and dead skin cells, revealing glowing skin.", price: "₹349" },
+      cherry: { name: "Cherry Body Wash", img: "images/blushbloom body wash.jpg", desc: "Refreshing body wash with cherry essence that leaves your skin feeling fruity-fresh.", price: "₹299" },
+      vanilla: { name: "Vanilla Body Mist", img: "images/blushbloom body mist.jpg", desc: "Delicate and sweet vanilla fragrance to keep you smelling fresh all day.", price: "₹399" },
+      tint: { name: "Lip & Cheek Tint", img: "images/blushbloom lip tint.png", desc: "Multi-purpose tint for lips and cheeks, giving a natural flush of color.", price: "₹199" },
+      nudeLipstick: { name: "Nude Lipstick", img: "images/blushbloom nude lipstick.png", desc: "Creamy nude lipstick that glides on smoothly for a natural look.", price: "₹149" },
+      highlighter: { name: "Highlighter", img: "images/blushbloom highlighter.png", desc: "Radiant highlighter that adds a luminous glow to your makeup.", price: "₹199" },
+      eyeshadow: { name: "Eyeshadow Palette", img: "images/blushbloom eyeshadow.png", desc: "Versatile eyeshadow palette with a range of shades for every occasion.", price: "₹299" }
+    };
+
+    // Get product key from URL
+    const params = new URLSearchParams(window.location.search);
+    const productKey = params.get("product");
+
+    // Display product details
+    const container = document.querySelector(".product-container");
+    if (products[productKey]) {
+      const p = products[productKey];
+      document.getElementById("product-img").src = p.img;
+      document.getElementById("product-name").innerText = p.name;
+      document.getElementById("product-desc").innerText = p.desc;
+      document.getElementById("product-price").innerText = p.price;
+
+      // Add to Cart
+      document.querySelector(".buy-button").addEventListener("click", () => {
+        let cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+        const existing = cartItems.find(item => item.name === p.name);
+        if(existing){
+          existing.qty += 1;
+        } else {
+          cartItems.push({ name: p.name, price: p.price, image: p.img, qty: 1 });
+        }
+        localStorage.setItem("cartItems", JSON.stringify(cartItems));
+        alert(`${p.name} added to cart!`);
+        window.location.href = "cart.html";
+      });
+
+    } else {
+      container.innerHTML = "<h2>Product not found</h2>";
+    }
+  </script>
+
+</body>
+</html>

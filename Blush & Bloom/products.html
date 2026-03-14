@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blush & Bloom Products</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fff8f8;
+  }
+  .navbar {
+    background-color: #ffb6c1;
+    padding: 15px;
+    text-align: center;
+  }
+  .navbar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  .navbar ul li {
+    display: inline;
+    margin: 0 20px;
+  }
+  .navbar ul li a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+  }
+  .search-bar {
+    text-align:center;
+    margin:20px 0;
+  }
+  .search-bar input {
+    padding:10px 15px; 
+    width:250px; 
+    border-radius:20px; 
+    border:1px solid #ccc; 
+    font-size:16px;
+  }
+  .filter-bar {
+    margin: 30px 0;
+    text-align: center;
+  }
+  .filter-bar button {
+    background-color: #ffe4e1;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  .filter-bar button:hover {
+    background-color: #ffb6c1;
+    color: white;
+  }
+  .product-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .product-box {
+    width: 180px;
+    background-color: #ffe4e1;
+    border-radius: 15px;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.2s;
+  }
+  .product-box img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  .product-name {
+    font-weight: bold;
+    font-size: 16px;
+    margin: 10px 0 5px;
+  }
+  .product-box hr {
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 5px 0;
+  }
+  .price {
+    font-size: 15px;
+    color: #d6336c;
+    font-weight: bold;
+    margin: 5px 0;
+  }
+  .add-to-cart-button, .wishlist-button {
+    background-color: #ff69b4;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 5px;
+    transition: background-color 0.3s;
+  }
+  .add-to-cart-button:hover, .wishlist-button:hover {
+    background-color: #d6336c;
+  }
+</style>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<nav class="navbar">
+  <ul>
+    <li><a href="home.html">Home</a></li>
+    <li><a href="products.html">Products</a></li>
+    <li><a href="aboutus.html">About Us</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li>
+      <a href="cart.html" style="position: relative;">
+        <i class="fas fa-shopping-cart" style="font-size: 20px;"></i>
+        <span id="cart-count" style="
+          position: absolute;
+          top: -8px;
+          right: -12px;
+          background: red;
+          color: white;
+          font-size: 12px;
+          padding: 2px 6px;
+          border-radius: 50%;
+        ">0</span>
+      </a>
+    </li>
+    <li><a href="wishlist.html"><i class="fas fa-heart" style="color: white;"></i></a></li>
+    <li><a href="login.html">Login</a></li>
+  </ul>
+</nav>
+
+<!-- Search Bar -->
+<div class="search-bar">
+  <input type="text" id="product-search" placeholder="Search products...">
+</div>
+
+<!-- Filter Bar -->
+<div class="filter-bar">
+  <button data-category="all">All</button>
+  <button data-category="skincare">Skincare</button>
+  <button data-category="haircare">Haircare</button>
+  <button data-category="bodycare">Bodycare</button>
+  <button data-category="makeup">Makeup</button>
+</div>
+
+<!-- Product Container -->
+<div id="product-list" class="product-row"></div>
+
+<script>
+let currentFilter = "all";
+let currentSearch = "";
+
+// Product container
+const container = document.getElementById('product-list');
+
+// Products array
+const products = [
+  {name:"Rose Cream", price:199, category:"skincare", image:"images/blushbloom rose cream.jpg"},
+  {name:"Aloe Vera Gel", price:249, category:"skincare", image:"images/blushbloom aloevera gel.png"},
+  {name:"Vitamin C Serum", price:199, category:"skincare", image:"images/Blush&Bloom vitamin c serum.jpg"},
+  {name:"Mint Cleanser", price:289, category:"skincare", image:"images/blushbloom mint cleanser.png"},
+  {name:"Herbal Hair Oil", price:199, category:"haircare", image:"images/blushbloom hair oil.png"},
+  {name:"Frizz Control Serum", price:249, category:"haircare", image:"images/blushbloom hair serum.jpg"},
+  {name:"Keratin Hair Mask", price:299, category:"haircare", image:"images/bkushbloom hair mask.png"},
+  {name:"Hibiscus Shampoo", price:199, category:"haircare", image:"images/blushbloom hair shampoo.png"},
+  {name:"Shea Butter Lotion", price:249, category:"bodycare", image:"images/blushbloom body lotion.jpg"},
+  {name:"Detan Body Scrub", price:279, category:"bodycare", image:"images/blushbloom body scrub .jpg"},
+  {name:"Cherry Body Wash", price:199, category:"bodycare", image:"images/blushbloom body wash.jpg"},
+  {name:"Vanilla Body Mist", price:229, category:"bodycare", image:"images/blushbloom body mist.jpg"},
+  {name:"Lip & Cheek Tint", price:199, category:"makeup", image:"images/blushbloom lip tint.png"},
+  {name:"Nude Lipstick", price:149, category:"makeup", image:"images/blushbloom nude lipstick.png"},
+  {name:"Highlighter", price:199, category:"makeup", image:"images/blushbloom highlighter.png"},
+  {name:"Eyeshadow Palette", price:299, category:"makeup", image:"images/blushbloom eyeshadow.png"}
+];
+const productKeyMap = {
+  "Rose Cream":"rose",
+  "Aloe Vera Gel":"aloe",
+  "Vitamin C Serum":"vitamin",
+  "Mint Cleanser":"mint",
+  "Herbal Hair Oil":"herbal",
+  "Frizz Control Serum":"frizz",
+  "Keratin Hair Mask":"keratin",
+  "Hibiscus Shampoo":"hibiscus",
+  "Shea Butter Lotion":"shea",
+  "Detan Body Scrub":"detan",
+  "Cherry Body Wash":"cherry",
+  "Vanilla Body Mist":"vanilla",
+  "Lip & Cheek Tint":"tint",
+  "Nude Lipstick":"nudeLipstick",
+  "Highlighter":"highlighter",
+  "Eyeshadow Palette":"eyeshadow"
+};
+
+
+// Render products
+function renderProducts(){
+  container.innerHTML = "";
+  const filtered = products.filter(p=>{
+    const matchCategory = currentFilter==="all" || p.category.toLowerCase()===currentFilter.toLowerCase();
+    const matchSearch = p.name.toLowerCase().includes(currentSearch.toLowerCase());
+    return matchCategory && matchSearch;
+  });
+
+  if(filtered.length===0){
+    container.innerHTML = "<p>No products found!</p>";
+    return;
+  }
+
+  filtered.forEach(p=>{
+    const productUrl = productKeyMap[p.name];
+
+    // Check if product is already in cart
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const existingCartItem = cart.find(c=>c.name===p.name);
+    const qty = existingCartItem ? existingCartItem.qty : 1;
+
+    container.innerHTML += `
+      <div class="product-box" data-name="${p.name}">
+        <a href="product-details.html?product=${productUrl}">
+          <img src="${p.image}" alt="${p.name}">
+        </a>
+        <p class="product-name">
+          <a href="product-details.html?product=${productUrl}">${p.name}</a>
+        </p>
+        <hr>
+        <p class="price">₹${p.price}</p>
+
+        <div class="cart-controls">
+          ${existingCartItem 
+            ? `<div class="qty-container" style="display:flex; justify-content:center; align-items:center; gap:5px;">
+                <button class="qty-minus">-</button>
+                <span class="qty-number">${qty}</span>
+                <button class="qty-plus">+</button>
+              </div>`
+            : `<button class="add-to-cart-button">Add To Cart</button>`
+          }
+        </div>
+
+        <button class="wishlist-button"><i class="fas fa-heart"></i></button>
+      </div>
+    `;
+  });
+
+  initCartWishlist();
+}
+
+// Filters
+document.querySelectorAll('.filter-bar button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    currentFilter = btn.getAttribute('data-category');
+    renderProducts();
+  });
+});
+
+// Search
+document.getElementById('product-search').addEventListener('input', (e)=>{
+  currentSearch = e.target.value;
+  renderProducts();
+});
+
+// Cart + Wishlist logic
+function initCartWishlist(){
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  // Update cart count
+  function updateCartCount(){
+    const totalQty = cart.reduce((acc,item)=>acc+item.qty,0);
+    document.getElementById("cart-count").innerText = totalQty;
+  }
+
+  // Add to Cart buttons
+  document.querySelectorAll('.add-to-cart-button').forEach(btn=>{
+    btn.onclick = ()=>{
+      const box = btn.closest('.product-box');
+      const name = box.dataset.name;
+      const price = parseInt(box.querySelector('.price').innerText.replace('₹',''));
+      const image = box.querySelector('img').getAttribute('src');
+
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const existing = cart.find(p=>p.name===name);
+      if(existing){
+        existing.qty +=1;
+      } else{
+        cart.push({name, price, image, qty:1});
+      }
+      localStorage.setItem("cart", JSON.stringify(cart));
+      renderProducts(); // Re-render to show -/+ controls
+      updateCartCount();
+    };
+  });
+
+  // Quantity controls
+  document.querySelectorAll('.qty-container').forEach(container=>{
+    const minus = container.querySelector('.qty-minus');
+    const plus = container.querySelector('.qty-plus');
+    const number = container.querySelector('.qty-number');
+    const box = container.closest('.product-box');
+    const name = box.dataset.name;
+
+    minus.onclick = ()=>{
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const item = cart.find(p=>p.name===name);
+      if(item.qty>1){
+        item.qty -=1;
+        number.innerText = item.qty;
+      } else {
+        // Remove from cart if qty=1
+        cart = cart.filter(p=>p.name!==name);
+        renderProducts();
+      }
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCartCount();
+    };
+
+    plus.onclick = ()=>{
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const item = cart.find(p=>p.name===name);
+      item.qty +=1;
+      number.innerText = item.qty;
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCartCount();
+    };
+  });
+
+  // Wishlist buttons
+  document.querySelectorAll('.wishlist-button').forEach(btn=>{
+    btn.onclick = ()=>{
+      const box = btn.closest('.product-box');
+      const name = box.dataset.name;
+      const price = parseInt(box.querySelector('.price').innerText.replace('₹',''));
+      const image = box.querySelector('img').getAttribute('src');
+      let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+      if(!wishlist.find(p=>p.name===name)){
+        wishlist.push({name, price, image});
+        localStorage.setItem("wishlist", JSON.stringify(wishlist));
+        alert("Added to Wishlist 💖");
+      } else alert("Already in Wishlist!");
+    };
+  });
+
+  updateCartCount();
+}
+
+
+renderProducts();
+</script>
+</body>
+</html>

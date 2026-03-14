@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login - Blush & Bloom</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7e7ef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background: #fff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            width: 350px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #d26fa1;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background: #d26fa1;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #b85d8d;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Admin Login</h2>
+        <input type="text" id="adminUser" placeholder="Enter username" />
+        <input type="password" id="adminPass" placeholder="Enter password" />
+        <button onclick="adminLogin()">Login</button>
+        <p class="error" id="errorMsg">Invalid username or password!</p>
+    </div>
+
+    <script>
+        function adminLogin() {
+            const user = document.getElementById("adminUser").value;
+            const pass = document.getElementById("adminPass").value;
+            const correctUser = "admin";
+            const correctPass = "blush123";
+
+            if (user === correctUser && pass === correctPass) {
+                window.location.href = "admindashboard.html";
+            } else {
+                document.getElementById("errorMsg").style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>

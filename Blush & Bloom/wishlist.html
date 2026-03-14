@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Wishlist - Blush & Bloom</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff0f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar {
+      background-color: #ffb6c1;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-weight: bold;
+    }
+
+    h1 {
+      text-align: center;
+      color: #d6336c;
+      margin-top: 30px;
+    }
+
+    .wishlist-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 30px;
+      gap: 20px;
+    }
+
+    .wishlist-item {
+      background-color: #ffe4e1;
+      padding: 15px;
+      border-radius: 15px;
+      width: 200px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .wishlist-item img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .wishlist-item h3 {
+      margin: 10px 0 5px;
+      font-size: 16px;
+      color: #d6336c;
+    }
+
+    .wishlist-item p {
+      margin: 0;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .remove-button {
+      background-color: #ff6b81;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 20px;
+      margin-top: 10px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .remove-button:hover {
+      background-color: #d6336c;
+    }
+
+    .empty {
+      text-align: center;
+      font-size: 18px;
+      color: #999;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <a href="home.html">Home</a>
+    <a href="products.html">Products</a>
+    <a href="cart.html">Cart</a>
+    <a href="wishlist.html">Wishlist</a>
+  </div>
+
+  <h1>My Wishlist</h1>
+
+  <div class="wishlist-container" id="wishlistContainer"></div>
+  <p id="emptyMessage" class="empty" style="display: none;">Your wishlist is empty 😢</p>
+
+  <script>
+    const wishlistContainer = document.getElementById("wishlistContainer");
+    const emptyMessage = document.getElementById("emptyMessage");
+
+    let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+
+    function displayWishlist() {
+      wishlistContainer.innerHTML = "";
+
+      if (wishlist.length === 0) {
+        emptyMessage.style.display = "block";
+        return;
+      }
+
+      wishlist.forEach((item, index) => {
+        const div = document.createElement("div");
+        div.classList.add("wishlist-item");
+        div.innerHTML = `
+          <img src="${item.image}" alt="${item.name}">
+          <h3>${item.name}</h3>
+          <p>₹${item.price}</p>
+          <button class="remove-button" onclick="removeFromWishlist(${index})">Remove</button>
+        `;
+        wishlistContainer.appendChild(div);
+      });
+    }
+
+    function removeFromWishlist(index) {
+      wishlist.splice(index, 1);
+      localStorage.setItem("wishlist", JSON.stringify(wishlist));
+      displayWishlist();
+    }
+
+    displayWishlist();
+  </script>
+
+</body>
+</html>

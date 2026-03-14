@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Blush & Bloom</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7e7ef;
+        }
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #d26fa1;
+            color: white;
+            position: fixed;
+            padding-top: 30px;
+        }
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .sidebar a {
+            display: block;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+        }
+        .sidebar a:hover {
+            background: #b75c8c;
+        }
+        .content {
+            margin-left: 250px;
+            padding: 30px;
+        }
+        .card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        button {
+            padding: 8px 12px;
+            border: none;
+            background: #d26fa1;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+        button:hover {
+            background: #b75c8c;
+        }
+        .delete-btn {
+            background: #ff4d6d;
+        }
+        .delete-btn:hover {
+            background: #d93c56;
+        }
+        #addForm input, #addForm select {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Admin Panel</h2>
+        <a href="#" onclick="showSection('home')">Dashboard Home</a>
+        <a href="#" onclick="showSection('products')">Manage Products</a>
+        <a class="logout" href="admin-login.html">Logout</a>
+    </div>
+
+    <div class="content">
+        <div id="home" class="card">
+            <h2>Welcome Admin!</h2>
+        </div>
+
+        <div id="products" class="card" style="display:none;">
+            <h2>Manage Products</h2>
+
+            <h3>Add New Product</h3>
+            <form id="addForm" onsubmit="addProduct(event)">
+                <input type="text" id="pname" placeholder="Product Name" required>
+                <input type="text" id="pprice" placeholder="Price" required>
+                <select id="pcategory" required>
+                    <option value="Skincare">Skincare</option>
+                    <option value="Haircare">Haircare</option>
+                    <option value="Bodycare">Bodycare</option>
+                    <option value="Makeup">Makeup</option>
+                </select>
+                <button type="submit">Add Product</button>
+            </form>
+
+            <h3 style="margin-top: 30px;">Product List</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Category</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="productTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function showSection(section) {
+            document.getElementById('home').style.display = 'none';
+            document.getElementById('products').style.display = 'none';
+            document.getElementById(section).style.display = 'block';
+        }
+
+    let products = JSON.parse(localStorage.getItem('adminProducts')) || [];
+
+    function addProduct(event) {
+        event.preventDefault();
+
+        const name = document.getElementById('pname').value.trim();
+        const price = document.getElementById('pprice').value.trim();
+        const category = document.getElementById('pcategory').value;
+
+        // Validation
+        if (name === "") {
+            alert("Product name is required");
+            return;
+        }
+        if (price === "" || isNaN(price) || price <= 0) {
+            alert("Enter valid price");
+            return;
+        }
+        if (category === "") {
+            alert("Select category");
+            return;
+        }
+
+        products.push({ name, price, category });
+        localStorage.setItem('adminProducts', JSON.stringify(products));
+
+        loadProducts(); // 🔥 THIS IS IMPORTANT
+        document.getElementById('addForm').reset();
+    }
+
+    function loadProducts() {
+        const list = document.getElementById('productTable');
+        list.innerHTML = ""; // 🔥 clear old list
+
+        products.forEach((product, index) => {
+            list.innerHTML += `
+                <tr>
+                    <td>${product.name}</td>
+                    <td>₹${product.price}</td>
+                    <td>${product.category}</td>
+                    <td>
+                        <button onclick="deleteProduct(${index})">Delete</button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    function deleteProduct(index) {
+        products.splice(index, 1);
+        localStorage.setItem('adminProducts', JSON.stringify(products));
+        loadProducts();
+    }
+
+    loadProducts(); // page load pe existing products
+</script>

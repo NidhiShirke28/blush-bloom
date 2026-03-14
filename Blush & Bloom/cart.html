@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  <meta charset="UTF-8">
+  <title>Shopping Cart - Blush & Bloom</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .cart-container {
+      max-width: 800px;
+      margin: 50px auto;
+      background-color: #fffafc;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .cart-container h2 {
+      text-align: center;
+      color: #d6336c;
+      margin-bottom: 20px;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 15px 0;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 10px;
+    }
+
+    .cart-item img {
+      height: 80px;
+      width: 80px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .cart-details {
+      flex: 1;
+      margin-left: 20px;
+    }
+
+    .cart-price {
+      font-weight: bold;
+    }
+
+    .cart-total {
+      text-align: right;
+      font-size: 18px;
+      margin-top: 20px;
+    }
+    
+    .checkout-btn {
+      display: block;
+      width: 100%;
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      padding: 15px;
+      border-radius: 25px;
+      font-size: 16px;
+      margin-top: 30px;
+      cursor: pointer;
+    }
+
+    .checkout-btn:hover {
+      background-color: #d6336c;
+    }
+  </style>
+</head>
+<body>
+  <div class="cart-container">
+    <h2>Your Shopping Cart</h2>
+
+    <div id="cart-items">
+    </div>
+
+    <div class="cart-total" id="cart-total">
+      Total: ₹0
+    </div>
+
+    <a href="checkout.html"><button class="checkout-btn">Proceed to Checkout</button></a>
+  </div>
+
+  <script>
+    const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+
+    const container = document.getElementById("cart-items");
+    const totalBox = document.getElementById("cart-total");
+
+    let total = 0;
+    cartItems.forEach(item => {
+      total += item.price;
+
+      container.innerHTML += `
+        <div class="cart-item">
+          <img src="${item.image}" alt="${item.name}">
+          <div class="cart-details">
+            <p>${item.name}</p>
+            <p class="cart-price">₹${item.price}</p>
+          </div>
+        </div>
+      `;
+    });
+
+    totalBox.innerText = "Total: ₹" + total;
+    
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  function displayCart() {
+    let container = document.getElementById("cart-items");
+    container.innerHTML = "";
+
+    cart.forEach((item, index) => {
+      container.innerHTML += `
+        <div class="cart-item">
+          <img src="${item.image}" width="100">
+          <p>${item.name}</p>
+          <p>₹${item.price}</p>
+          <button onclick="removeItem(${index})">Remove</button>
+          
+        </div>
+        <hr>
+      `;
+    });
+    updateTotal();
+  }
+
+  function removeItem(index) {
+    cart.splice(index, 1); 
+    localStorage.setItem("cart", JSON.stringify(cart));
+    displayCart();
+    updateTotal();
+  
+  }
+  function updateTotal() {
+    let total = 0;
+    cart.forEach((item) => {
+      total += parseFloat(item.price.replace("₹", "").trim());
+    });
+    
+
+    const totalBox = document.getElementById("total-amount");
+    if (totalBox) {
+      totalBox.innerText = "Total: ₹" + total.toFixed(2);
+    }
+  }
+  displayCart();
+  updateTotal(); 
+  </script>
+  <script>
+
+function loadCart() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const container = document.getElementById("cart-items");
+    container.innerHTML = "";
+
+    if(cart.length === 0) {
+        container.innerHTML = "<p>Your cart is empty!</p>";
+        document.getElementById("cart-count").innerText = 0;
+        return;
+    }
+
+    cart.forEach((item, index) => {
+        const div = document.createElement("div");
+        div.classList.add("cart-item");
+        div.style.display = "flex";
+        div.style.alignItems = "center";
+        div.style.gap = "15px";
+        div.style.marginBottom = "15px";
+
+        div.innerHTML = `
+            <img src="${item.image}" alt="${item.name}" style="width:80px; height:80px; object-fit:cover; border-radius:10px;">
+            <div style="flex:1;">
+                <p><strong>${item.name}</strong></p>
+                <p>₹${item.price}</p>
+            </div>
+            <div class="quantity-control">
+                <button class="decrease">-</button>
+                <span class="qty">${item.qty}</span>
+                <button class="increase">+</button>
+            </div>
+            <button class="remove-item" style="
+                background:red; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;
+            ">Remove</button>
+        `;
+
+        container.appendChild(div);
+
+        const decreaseBtn = div.querySelector(".decrease");
+        const increaseBtn = div.querySelector(".increase");
+        const qtySpan = div.querySelector(".qty");
+        const removeBtn = div.querySelector(".remove-item");
+
+        decreaseBtn.addEventListener("click", () => {
+            if(item.qty > 1) item.qty--;
+            qtySpan.innerText = item.qty;
+            cart[index].qty = item.qty;
+            localStorage.setItem("cart", JSON.stringify(cart));
+            updateCartCount();
+        });
+
+        increaseBtn.addEventListener("click", () => {
+            item.qty++;
+            qtySpan.innerText = item.qty;
+            cart[index].qty = item.qty;
+            localStorage.setItem("cart", JSON.stringify(cart));
+            updateCartCount();
+        });
+
+        removeBtn.addEventListener("click", () => {
+            cart.splice(index, 1);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            loadCart();
+        });
+    });
+
+   
+    updateCartCount();
+}
+
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const totalQty = cart.reduce((acc, item) => acc + item.qty, 0);
+    document.getElementById("cart-count").innerText = totalQty;
+}
+
+loadCart();
+</script>
+  </script>
+</body>
+</html>
+
